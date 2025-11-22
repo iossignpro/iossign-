@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Sign</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .copy-section {
+            margin-bottom: 30px;
+        }
+        
+        .copy-btn {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 15px;
+            background: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+        
+        .copy-btn:hover {
+            background: #0056CC;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 122, 255, 0.4);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        
+        .copy-btn i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .url-preview {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #555;
+            text-align: left;
+            word-break: break-all;
+            border: 1px solid #e9ecef;
+        }
+        
+        .feedback {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .feedback.show {
+            opacity: 1;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>iOS Sign</h1>
+            <p>点击复制下面官网链接在浏览器里打开使用</p>
+        </div>
+        
+        <div class="copy-section">
+            <div class="url-preview">https://iossign.netlify.app</div>
+            <button class="copy-btn" data-url="https://iossign.netlify.app">
+                <i class="fas fa-copy"></i> 一键复制官网链接 1
+            </button>
+            
+            <div class="url-preview">https://iossignos.netlify.app</div>
+            <button class="copy-btn" data-url="https://iossignos.netlify.app">
+                <i class="fas fa-copy"></i> 一键复制官网链接 2
+            </button>
+            
+            <div class="url-preview">https://iossignios.netlify.app</div>
+            <button class="copy-btn" data-url="https://iossignios.netlify.app">
+                <i class="fas fa-copy"></i> 一键复制官网链接 3
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>复制后请在浏览器中打开链接</p>
+        </div>
+    </div>
+    
+    <div class="feedback" id="feedback">链接已复制到剪贴板！</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyButtons = document.querySelectorAll('.copy-btn');
+            const feedback = document.getElementById('feedback');
+            
+            copyButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const url = this.getAttribute('data-url');
+                    
+                    // 使用现代剪贴板API
+                    navigator.clipboard.writeText(url).then(() => {
+                        // 显示成功反馈
+                        feedback.textContent = '链接已复制到剪贴板！';
+                        feedback.style.background = '#4CAF50';
+                        feedback.classList.add('show');
+                        
+                        // 2秒后隐藏反馈
+                        setTimeout(() => {
+                            feedback.classList.remove('show');
+                        }, 2000);
+                    }).catch(err => {
+                        // 如果现代API失败，使用备用方法
+                        fallbackCopyTextToClipboard(url);
+                    });
+                });
+            });
+            
+            // 备用复制方法
+            function fallbackCopyTextToClipboard(text) {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.opacity = 0;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        feedback.textContent = '链接已复制到剪贴板！';
+                        feedback.style.background = '#4CAF50';
+                    } else {
+                        feedback.textContent = '复制失败，请手动选择并复制';
+                        feedback.style.background = '#FF5722';
+                    }
+                    feedback.classList.add('show');
+                    
+                    setTimeout(() => {
+                        feedback.classList.remove('show');
+                    }, 2000);
+                } catch (err) {
+                    feedback.textContent = '复制失败，请手动选择并复制';
+                    feedback.style.background = '#FF5722';
+                    feedback.classList.add('show');
+                    
+                    setTimeout(() => {
+                        feedback.classList.remove('show');
+                    }, 2000);
+                }
+                
+                document.body.removeChild(textArea);
+            }
+        });
+    </script>
+</body>
+</html>
