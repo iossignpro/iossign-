@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应用下载 - TestFlight风格</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            padding: 40px 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .app-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 22px;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .app-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff, #a8c0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .app-version {
+            color: #a8c0ff;
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        
+        .description {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .description h3 {
+            color: #a8c0ff;
+            margin-bottom: 10px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .description h3 i {
+            margin-right: 8px;
+        }
+        
+        .description p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .wechat-tip {
+            background: rgba(7, 193, 96, 0.15);
+            border: 1px solid rgba(7, 193, 96, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .wechat-tip.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .wechat-tip h3 {
+            color: #07c160;
+            margin-bottom: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .wechat-tip h3 i {
+            margin-right: 8px;
+        }
+        
+        .wechat-tip p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .url-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 20px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        
+        .url-display.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .footer {
+            margin-top: 25px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+        }
+        
+        .steps {
+            text-align: left;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .steps.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .step {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .success-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(7, 193, 96, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .success-message.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-icon">
+            <i class="fas fa-rocket"></i>
+        </div>
+        
+        <h1 class="app-name">应用名称</h1>
+        <p class="app-version">版本 2.1.4 • 测试版</p>
+        
+        <div class="description">
+            <h3><i class="fas fa-info-circle"></i> 应用说明</h3>
+            <p>这是一款正在测试阶段的应用，欢迎参与测试并提供宝贵意见。</p>
+        </div>
+        
+        <div class="wechat-tip" id="wechatTip">
+            <h3><i class="fab fa-weixin"></i> 微信内打开提示</h3>
+            <p>检测到您在微信内打开，请复制下方链接到手机浏览器中访问，以获得完整功能体验。</p>
+        </div>
+        
+        <div class="url-display" id="urlDisplay">
+            http://154.36.161.59:8124/
+        </div>
+        
+        <button class="btn btn-primary" id="actionButton">
+            <i class="fas fa-download"></i> 下载应用
+        </button>
+        
+        <button class="btn btn-secondary" id="copyButton">
+            <i class="fas fa-copy"></i> 复制链接
+        </button>
+        
+        <div class="steps" id="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">点击上方"复制链接"按钮</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">打开手机浏览器（Safari/Chrome）</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">在地址栏粘贴并打开链接</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 应用名称 • TestFlight 测试版</p>
+        </div>
+    </div>
+    
+    <div class="success-message" id="successMessage">
+        链接已复制到剪贴板！
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const wechatTip = document.getElementById('wechatTip');
+            const urlDisplay = document.getElementById('urlDisplay');
+            const actionButton = document.getElementById('actionButton');
+            const copyButton = document.getElementById('copyButton');
+            const steps = document.getElementById('steps');
+            const successMessage = document.getElementById('successMessage');
+            
+            // 检测是否在微信中打开
+            function isWechatBrowser() {
+                const ua = navigator.userAgent.toLowerCase();
+                return ua.indexOf('micromessenger') !== -1;
+            }
+            
+            // 初始化页面
+            function initPage() {
+                if (isWechatBrowser()) {
+                    // 微信环境
+                    wechatTip.classList.add('show');
+                    urlDisplay.classList.add('show');
+                    steps.classList.add('show');
+                    
+                    actionButton.innerHTML = '<i class="fas fa-external-link-alt"></i> 前往浏览器打开';
+                    actionButton.addEventListener('click', function() {
+                        // 微信中无法直接打开外部链接，提示复制
+                        copyToClipboard();
+                    });
+                } else {
+                    // 浏览器环境
+                    actionButton.innerHTML = '<i class="fas fa-download"></i> 立即下载';
+                    actionButton.addEventListener('click', function() {
+                        // 直接跳转到下载页面
+                        window.location.href = 'http://154.36.161.59:8124/';
+                    });
+                    
+                    // 浏览器中隐藏复制按钮和步骤说明
+                    copyButton.style.display = 'none';
+                }
+            }
+            
+            // 复制到剪贴板
+            function copyToClipboard() {
+                const url = 'http://154.36.161.59:8124/';
+                
+                navigator.clipboard.writeText(url).then(() => {
+                    showSuccessMessage();
+                }).catch(err => {
+                    // 备用复制方法
+                    fallbackCopyTextToClipboard(url);
+                });
+            }
+            
+            // 备用复制方法
+            function fallbackCopyTextToClipboard(text) {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.opacity = 0;
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showSuccessMessage();
+                    }
+                } catch (err) {
+                    console.error('复制失败:', err);
+                }
+                
+                document.body.removeChild(textArea);
+            }
+            
+            // 显示成功消息
+            function showSuccessMessage() {
+                successMessage.classList.add('show');
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+            }
+            
+            // 复制按钮事件
+            copyButton.addEventListener('click', copyToClipboard);
+            
+            // 初始化页面
+            initPage();
+        });
+    </script>
+</body>
+</html>
